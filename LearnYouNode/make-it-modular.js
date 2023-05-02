@@ -98,3 +98,15 @@
       » To verify your program, run: learnyounode verify program.js                 
       » For help run: learnyounode help  
 */
+
+const mymodule = require('./my-module.js');
+
+const dir = process.argv[2];
+const ext = process.argv[3];
+
+mymodule(dir, ext, function (err, files) {
+  if (err) return console.error(err);
+  files.forEach(function (file) {
+    console.log(file);
+  });
+});
