@@ -2,6 +2,7 @@ const multer = require('multer');
 const cors = require('cors');
 const express = require('express')
 const bodyParser = require('body-parser');
+const fetch = require('fetch');
 const app = express()
 const port = 3000
 
@@ -108,21 +109,26 @@ app.get('/now', (req, res) => {
   res.send(`The current time in ${tz} is: ${date}`);
 });
 
-// Post Name into a list of Names via a form
+// List of already existing names
 var usrName = [
               "Ethan", 
               "Olivia"
 ]
+
+// Shows a list of names already in List 'usrName'
+// If any names are added while Server is running they should alse be visible
 app.get('/name', (req, res) => {
   res.send(`${usrName.map((name) => `<li>${name}</li>`).join('')}`);
 });
 
+// POST method implemented
 app.post('/name', (req, res) => {
   var name = req.body.name || 'Undefined';
   usrName.push(name);
   res.send(`${usrName.map((name) => `<li>${name}</li>`).join('')}`);
 });
 
+// DELETE method implemented, filters through list using name
 app.delete('/name', multer().none(), (req, res) => {
   console.log(req.body.name);
   usrName = usrName.filter((n) => n !== req.body.name);
@@ -130,15 +136,29 @@ app.delete('/name', multer().none(), (req, res) => {
   res.sendStatus(204);
 });
 
+// Can only acces site with key
 app.get('/secret2', (req, res) =>{
-  const key = 'aGFja2VyOjEyMzQ';
-  if(req.query.basic == key){
-    res.status(200).send('Authorized');
-  }
-  else{
-    res.status(401).send('Acces Denied');
-  }
+  const key = 'Basic aGFja2VyOjEyMzQ=';
+  console.log(req.headers);
 });
 
-// get a Quote by chuck norris from thie API 'https://api.chucknorris.io/jokes/random'
+// get quote from quote from 'https://api.chucknorris.io/jokes/random'
+const axios = require('axios');
 
+app.get('/chuck', async (req, res) => {
+  try {
+    const url = 'https://api.chucknorris.io/jokes/random';
+    const response = await axios.get(url);
+    let joke = response.data.value;
+
+    const name = req.query.name;
+    if (name) {
+      joke = joke.replace(/Chuck Norris/g, name);
+    }
+
+    res.send(joke);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving Chuck Norris joke');
+  }
+});
