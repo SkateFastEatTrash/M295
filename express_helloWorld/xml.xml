@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<note>
-    <to>Tove</to>
-    <from>Jani</from>
-    <heading>Reminder</heading>
-    <body>Don't forget me this weekend!</body>
-</note>
+<bookstore>
+  <book category="Children">
+    <title lang="en">Harry Potter and the Philosopher's Stone</title>
+    <author>J.K. Rowling</author>
+    <year>1997</year>
+    <price>9.99</price>
+  </book>
+  <book category="Cooking">
+    <title lang="en">Mastering the Art of French Cooking</title>
+    <author>Julia Child</author>
+    <year>1961</year>
+    <price>29.99</price>
+  </book>
+  <book category="Science Fiction">
+    <title lang="en">The Hitchhiker's Guide to the Galaxy</title>
+    <author>Douglas Adams</author>
+    <year>1979</year>
+    <price>12.99</price>
+  </book>
+</bookstore>
