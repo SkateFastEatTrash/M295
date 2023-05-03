@@ -1,13 +1,25 @@
+const multer = require('multer');
+const cors = require('cors');
 const express = require('express')
+const bodyParser = require('body-parser');
 const app = express()
 const port = 3000
 
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+//app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
+
 app.listen(port, () => {
-  console.log(`Express launched on port: ${port}`)
-})
+  console.log(
+      `\nPort: ${port}\thttp://localhost:${port}`
+  );
+});
 
 // returns hello world
-app.get('/', (req, res) => {
+app.get('/hello', (req, res) => {
   res.send('Hello World!')
 })
 
@@ -96,4 +108,37 @@ app.get('/now', (req, res) => {
   res.send(`The current time in ${tz} is: ${date}`);
 });
 
+// Post Name into a list of Names via a form
+var usrName = [
+              "Ethan", 
+              "Olivia"
+]
+app.get('/name', (req, res) => {
+  res.send(`${usrName.map((name) => `<li>${name}</li>`).join('')}`);
+});
+
+app.post('/name', (req, res) => {
+  var name = req.body.name || 'Undefined';
+  usrName.push(name);
+  res.send(`${usrName.map((name) => `<li>${name}</li>`).join('')}`);
+});
+
+app.delete('/name', multer().none(), (req, res) => {
+  console.log(req.body.name);
+  usrName = usrName.filter((n) => n !== req.body.name);
+  console.log(usrName);
+  res.sendStatus(204);
+});
+
+app.get('/secret2', (req, res) =>{
+  const key = 'aGFja2VyOjEyMzQ';
+  if(req.query.basic == key){
+    res.status(200).send('Authorized');
+  }
+  else{
+    res.status(401).send('Acces Denied');
+  }
+});
+
+// get a Quote by chuck norris from thie API 'https://api.chucknorris.io/jokes/random'
 
