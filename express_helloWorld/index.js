@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Express launched on port: ${port}`)
 })
 
 // returns hello world
@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 })
 
 // return current date and time
-app.get('/now', (req, res) =>{
+app.get('/time', (req, res) =>{
   res.send(new Date().toISOString())
 })
 
@@ -88,3 +88,12 @@ app.get('/me', (req, res) => {
     eyeColor: "Blue"
   });
 });
+
+// get now + timezone returns current date and time in the given timezone
+app.get('/now', (req, res) => {
+  const tz = req.query.tz || 'CET'; // default to CET if no timezone abbreviation is provided // lookup timezone based on abbreviation
+  const date = new Date().toLocaleString('de-CH', {timeZone: tz });
+  res.send(`The current time in ${tz} is: ${date}`);
+});
+
+
