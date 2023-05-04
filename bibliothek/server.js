@@ -1,5 +1,4 @@
 // Defining Constants
-const app = express()
 const cors = require('cors');
 const express = require('express')
 const bodyParser = require('body-parser');
@@ -8,7 +7,8 @@ const session = require('express-session')
 //Specifying Port
 const port = 3300
 
-
+//Secifiying App
+const app = express()
 
 // --------------------------------------------------------------------------------------//
 app.use(cors());
@@ -172,3 +172,25 @@ app.put('/lends/:isbn', (req, res) => {
   lendsBook(isbn, lent);
   res.send(findLends());
 });
+
+//--------------------------------------------------------------------------------------//
+
+// Coockies and Tokens
+
+// npm install express-session
+
+// Starting session
+app.use(session({
+  secret: 'supersecret',
+	resave: false,
+	saveUninitialized: true,
+  cookie: {}
+}))
+
+app.get('/visited', function (request, response, _) {
+  // request.session is the object that holds the information of this specific session
+  request.session.views = (request.session.views || 0) + 1
+  console.log(request.session)
+
+  response.end(request.session.views + ' views')
+})
